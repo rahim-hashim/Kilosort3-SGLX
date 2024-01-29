@@ -1,21 +1,12 @@
-# Kilosort3: spike sorting on GPUs with template matching, drift correction and a new clustering method
+# Kilosort3-SGLX: One-stop shop for implementing CatGT, Kilosort3, and phy2 extract-wavforms on multiple probes from SpikeGLX output
 
-For older versions, please see Github releases:   
+For more information on packages included:   
 
-* [Kilosort 2.5](https://github.com/MouseLand/Kilosort/releases/tag/v2.5) on Jan 30, 2021.
-* [Kilosort 2.0](https://github.com/MouseLand/Kilosort/releases/tag/v2.0) on Oct 28, 2020.
+* [Kilosort 3](https://github.com/MouseLand/Kilosort)
+* [SpikeGLX / CatGT](https://billkarsh.github.io/SpikeGLX/)
+* [phy](https://phy.readthedocs.io/en/latest/)
 
-## Citation requirement
 
-If you use any version of Kilosort, please cite the new Kilosort paper: 
-
-**Pachitariu, M., Sridhar, S., & Stringer, C. (2023). Solving the spike sorting problem with Kilosort. bioRxiv, 2023-01.**
-
-If you use **Kilosort 2.5**, please also cite:   
-
-Steinmetz, N. A., Aydin, C., Lebedeva, A., Okun, M., Pachitariu, M., Bauza, M., ... & Harris, T. D. (2021). Neuropixels 2.0: A miniaturized high-density probe for stable, long-term brain recordings. Science, 372(6539), eabf4588.
-
-![](Docs/img/frame_full.png)
 
 ## General description
 
@@ -36,63 +27,76 @@ Requirements:
   * Parallel Computing Toolbox
   * Signal Processing Toolbox
   * Statistics and Machine Learning Toolbox
-* An NVIDIA GPU and CUDA capabilities
+* NVIDIA GPU and CUDA capabilities
+* phy2 installed on computer
 
 You must run and complete successfully `mexGPUall.m` in the `CUDA` folder. This requires mexcuda support, which comes with the parallel computing toolbox. To set up mexcuda compilation, install the exact version of the CUDA toolkit compatible with your MATLAB version (see [here](https://www.mathworks.com/help/distcomp/gpu-support-by-release.html)). On Windows, you must also install a CPU compiler, for example the freely available [Visual Studio Community](https://www.visualstudio.com/vs/older-downloads/). You may need to check that the version of Visual Studio you install is compatible with your version of CUDA. If you had previously used a different CPU compiler in MATLAB, you must switch to the CUDA-compatible compiler using `mex -setup C++`. For more about mexcuda installation, see these [instructions](http://uk.mathworks.com/help/distcomp/mexcuda.html).
 
-### General instructions for running Kilosort2
+### General instructions for running Kilosort3-SGLX
 
-#### Option 1: Using the GUI
+#### MATLAB
 
-Navigate to the `Kilosort` directory and run `kilosort`:
-
-```bash
->> cd \my\kilosort\directory\
->> kilosort
-```
-See the [GUI documentation](https://github.com/MouseLand/Kilosort/wiki/1.-The-GUI) for more details.
-
-#### Option 2: Using scripts (classic method)
-
-1. Make a copy of `main_kilosort.m` and `\configFiles\StandardConfig_MOVEME.m` and put them in a different directory. These files will contain your own settings, and you don't want them to be overwritten when you update Kilosort.  
-2. Generate a channel map file for your probe using `\configFiles\createChannelMap.m` as a starting point.
-3. Edit the config file with desired parameters. You should at least set the file paths `ops.fbinary`, `ops.root` and `ops.fproc` (this file will not exist yet - `kilosort` will create it), the sampling frequency `ops.fs`, the number of channels in the file `ops.NchanTOT` and the location of your channel map file `ops.chanMap`.
-4. Edit `main_kilosort.m` so that the paths at the top ([lines 3–4](https://github.com/MouseLand/Kilosort/blob/main/main_kilosort.m#L3-L4)) point to your local copies of those GitHub repositories, and so that the configuration file is correctly specified ([lines 6–7](https://github.com/MouseLand/Kilosort/blob/2fba667359dbddbb0e52e67fa848f197e44cf5ef/main_kilosort.m#L6-L7)).
+Add all folders and subfolders to a MATLAB environment, navigate to `main-kilosort3.m`, update all paths pointing to your local data, channel map files, set Kilosort parameters (see: **Parameters** section for more information), and hit Run.
 
 ### Parameters
 
-If you are unhappy with the quality of the automated sorting, try changing one of the main parameters:
+`probes`: imec probes included from SpikeGLX
 
-`ops.Th = [10 4]` (default). Thresholds on spike detection used during the optimization `Th(1)` or during the final pass `Th(2)`. These thresholds are applied to the template projections, not to the voltage. Typically, `Th(1)` is high enough that the algorithm only picks up sortable units, while `Th(2)` is low enough that it can pick all of the spikes of these units. It doesn't matter if the final pass also collects noise: an additional per neuron threshold is set afterwards, and a splitting step ensures clusters with multiple units get split.
+* if empty (`[]`), includes all found folders 
 
-`ops.AUCsplit = 0.9` (default). Threshold on the area under the curve (AUC) criterion for performing a split in the final step. If the AUC of the split is higher than this, that split is considered good. However, a good split only goes through if, additionally, the cross-correlogram of the split units does not contain a big dip at time 0.
+`sessionNum`
 
-`ops.lam = 10` (default). The individual spike amplitudes are biased towards the mean of the cluster by this factor; 50 is a lot, 0 is no bias.
+* if empty (`[]`), includes all sessions (g0, g1,...)
 
-A list of all the adjustable parameters is in the example configuration file.
+`dest_folder`:
 
-## Integration with Phy GUI
+`runCatGT`:
 
-Kilosort2 provides a results file called `rez`, where the first column of `rez.st`are the spike times and the second column are the cluster identities. It also provides a field `rez.good` which is 1 if the algorithm classified that cluster as a good single unit. To visualize the results of Kilosort2, you can use [Phy](https://github.com/kwikteam/phy), which also provides a manual clustering interface for refining the results of the algorithm. Kilosort2 automatically sets the "good" units in Phy based on a <20% estimated contamination rate with spikes from other neurons (computed from the refractory period violations relative to expected).
+* 0=don't run
 
-Because Phy is written in Python, you also need to install [npy-matlab](https://github.com/kwikteam/npy-matlab), to provide read/write functions from MATLAB to Python.
+* **1=run (default)** 
 
-Detailed instructions for interpreting results are provided [here](https://github.com/kwikteam/phy-contrib/blob/master/docs/template-gui.md). That documentation was developed for Kilosort1, so things will look a little different with Kilosort2.
+`cat_prb_fld`:
+
+* only relevant with runCatGT = 1
+
+* see CatGT ReadMe for more details (default '0:3')
+
+`includeCatGT`:
+
+* 0=do not include
+
+* 1=both non-CatGT+CatGT
+
+* **2=only CatGT (default 2)**
+
+`extract_waveforms`: perform phy extract-waveforms (not performed in typical kilosort-3 runs)
+
+* **0=dont run extract-waveforms (default 0)**
+
+* 1=run extract-waveforms
+
+`deleteCATbin`: delete CAT bin file after running CatGT to save space
+
+* 0=save
+
+* **1=delete (default 1)**
+
+`deleteTemp`: delete temp_wh.dat after running Kilosort to save space
+
+* 0=save
+
+* **1=delete (default 1)**
 
 ## Credits
 
-Kilosort2 by Marius Pachitariu  
-GUI by Nick Steinmetz  
-eMouse simulation by Jennifer Colonell  
+SpikeGLX by Bill Karsh
+
+Kilosort3 by Marius Pachitariu / Nick Steinmetz  
+
+phy2 by UCL Cortex Lab
+ 
 
 ## Questions
 
 Please create an issue for bugs / installation problems.
-
-## Licence
-
-This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses>.
