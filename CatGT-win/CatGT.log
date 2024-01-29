@@ -1,0 +1,234 @@
+[Thd 25868 CPU 2 12/11/23 15:39:08.231] Error: Bad g- or t-indices.
+[Thd 25868 CPU 2 12/11/23 15:39:08.232] 
+[Thd 25868 CPU 2 12/11/23 15:39:08.232] *** ERROR: MISSING CRITICAL PARAMETERS ***
+[Thd 25868 CPU 2 12/11/23 15:39:08.232] ------------------------
+[Thd 25868 CPU 2 12/11/23 15:39:08.232] Purpose:
+[Thd 25868 CPU 2 12/11/23 15:39:08.232] + Optionally join trials with given run_name and index ranges [ga,gb] [ta,tb]...
+[Thd 25868 CPU 2 12/11/23 15:39:08.232] + ...Or run on any individual file.
+[Thd 25868 CPU 2 12/11/23 15:39:08.232] + Optionally apply demultiplexing corrections.
+[Thd 25868 CPU 2 12/11/23 15:39:08.233] + Optionally apply band-pass and global CAR filters.
+[Thd 25868 CPU 2 12/11/23 15:39:08.233] + Optionally edit out saturation artifacts.
+[Thd 25868 CPU 2 12/11/23 15:39:08.233] + Optionally extract tables of sync waveform edge times to drive TPrime.
+[Thd 25868 CPU 2 12/11/23 15:39:08.233] + Optionally extract tables of other nonneural event times to be aligned with spikes.
+[Thd 25868 CPU 2 12/11/23 15:39:08.233] + Optionally join the above outputs across different runs (supercat feature).
+
+[Thd 25868 CPU 10 12/11/23 15:39:08.233] Output:
+[Thd 25868 CPU 10 12/11/23 15:39:08.233] + Results are placed next to source, named like this, with t-index = tcat:
+[Thd 25868 CPU 10 12/11/23 15:39:08.233] +    path/run_name_g5_tcat.imec1.ap.bin.
+[Thd 25868 CPU 10 12/11/23 15:39:08.233] + Errors and run messages are appended to CatGT.log in the current working directory.
+
+[Thd 25868 CPU 10 12/11/23 15:39:08.233] Usage:
+[Thd 25868 CPU 6 12/11/23 15:39:08.233] >CatGT -dir=data_dir -run=run_name -g=ga,gb -t=ta,tb <which streams> [ options ]
+
+[Thd 25868 CPU 2 12/11/23 15:39:08.233] Which streams:
+[Thd 25868 CPU 2 12/11/23 15:39:08.233] -ni                      ;required to process ni stream
+[Thd 25868 CPU 2 12/11/23 15:39:08.234] -ob                      ;required to process ob streams
+[Thd 25868 CPU 2 12/11/23 15:39:08.234] -ap                      ;required to process ap streams
+[Thd 25868 CPU 2 12/11/23 15:39:08.234] -lf                      ;required to process lf streams
+[Thd 25868 CPU 2 12/11/23 15:39:08.234] -obx=0,3:5               ;if -ob process these OneBoxes
+[Thd 25868 CPU 2 12/11/23 15:39:08.234] -prb_3A                  ;if -ap or -lf process 3A-style probe files, e.g., run_name_g0_t0.imec.ap.bin
+[Thd 25868 CPU 2 12/11/23 15:39:08.234] -prb=0,3:5               ;if -ap or -lf AND !prb_3A process these probes
+
+[Thd 25868 CPU 2 12/11/23 15:39:08.234] Options:
+[Thd 25868 CPU 2 12/11/23 15:39:08.234] -no_run_fld              ;older data, or data files relocated without a run folder
+[Thd 25868 CPU 2 12/11/23 15:39:08.234] -prb_fld                 ;use folder-per-probe organization
+[Thd 25868 CPU 2 12/11/23 15:39:08.234] -prb_miss_ok             ;instead of stopping, silently skip missing probes
+[Thd 25868 CPU 2 12/11/23 15:39:08.234] -gtlist={gj,tja,tjb}     ;override {-g,-t} giving each listed g-index its own t-range
+[Thd 25868 CPU 2 12/11/23 15:39:08.234] -t=cat                   ;extract events from CatGT output files (instead of -t=ta,tb)
+[Thd 25868 CPU 6 12/11/23 15:39:08.234] -exported                ;apply FileViewer 'exported' tag to in/output filenames
+[Thd 25868 CPU 2 12/11/23 15:39:08.235] -t_miss_ok               ;instead of stopping, zero-fill if trial missing
+[Thd 25868 CPU 2 12/11/23 15:39:08.235] -zerofillmax=500         ;set a maximum zero-fill span (millisec)
+[Thd 25868 CPU 2 12/11/23 15:39:08.235] -startsecs=120.0         ;skip this initial span of each input stream (float seconds)
+[Thd 25868 CPU 2 12/11/23 15:39:08.235] -maxsecs=7.5             ;set a maximum output file length (float seconds)
+[Thd 25868 CPU 8 12/11/23 15:39:08.235] -apfilter=Typ,N,Fhi,Flo  ;apply ap band-pass filter of given {type, order, corners(float Hz)}
+[Thd 25868 CPU 8 12/11/23 15:39:08.235] -lffilter=Typ,N,Fhi,Flo  ;apply lf band-pass filter of given {type, order, corners(float Hz)}
+[Thd 25868 CPU 8 12/11/23 15:39:08.235] -no_tshift               ;DO NOT time-align channels to account for ADC multiplexing
+[Thd 25868 CPU 8 12/11/23 15:39:08.235] -loccar_um=40,140        ;apply ap local CAR annulus (exclude radius, include radius)
+[Thd 25868 CPU 8 12/11/23 15:39:08.235] -loccar=2,8              ;apply ap local CAR annulus (exclude radius, include radius)
+[Thd 25868 CPU 8 12/11/23 15:39:08.235] -gblcar                  ;apply ap global CAR filter over all channels
+[Thd 25868 CPU 8 12/11/23 15:39:08.235] -gbldmx                  ;apply ap global demuxed CAR filter over channel groups
+[Thd 25868 CPU 8 12/11/23 15:39:08.236] -gfix=0.40,0.10,0.02     ;rmv ap artifacts: ||amp(mV)||, ||slope(mV/sample)||, ||noise(mV)||
+[Thd 25868 CPU 2 12/11/23 15:39:08.236] -chnexcl={prb;chans}     ;this probe, exclude listed chans from ap loccar, gblcar, gfix
+[Thd 25868 CPU 2 12/11/23 15:39:08.236] -xa=0,0,2,3.0,4.5,25     ;extract pulse signal from analog chan (js,ip,word,thresh1(V),thresh2(V),millisec)
+[Thd 25868 CPU 2 12/11/23 15:39:08.236] -xd=2,0,384,6,500        ;extract pulse signal from digital chan (js,ip,word,bit,millisec)
+[Thd 25868 CPU 2 12/11/23 15:39:08.236] -xia=0,0,2,3.0,4.5,2     ;inverted version of xa
+[Thd 25868 CPU 2 12/11/23 15:39:08.236] -xid=2,0,384,6,50        ;inverted version of xd
+[Thd 25868 CPU 2 12/11/23 15:39:08.236] -bf=0,0,8,2,4,3          ;extract numeric bit-field from digital chan (js,ip,word,startbit,nbits,inarow)
+[Thd 25868 CPU 2 12/11/23 15:39:08.236] -inarow=5                ;extractor {xa,xd,xia,xid} antibounce stay high/low sample count
+[Thd 25868 CPU 2 12/11/23 15:39:08.236] -no_auto_sync            ;disable the automatic extraction of sync edges in all streams
+[Thd 25868 CPU 2 12/11/23 15:39:08.236] -save=2,0,5,20:60        ;save subset of probe chans (js,ip1,ip2,chan-list)
+[Thd 25868 CPU 2 12/11/23 15:39:08.236] -maxZ=0,0,100            ;probe inserted to given depth (ip,depth-type,depth-value)
+[Thd 25868 CPU 2 12/11/23 15:39:08.236] -pass1_force_ni_ob_bin   ;write pass one ni/ob binary tcat file even if not changed
+[Thd 25868 CPU 2 12/11/23 15:39:08.236] -supercat={dir,run_ga}   ;concatenate existing output files across runs (see ReadMe)
+[Thd 25868 CPU 2 12/11/23 15:39:08.236] -supercat_trim_edges     ;supercat after trimming each stream to matched sync edges
+[Thd 25868 CPU 2 12/11/23 15:39:08.236] -supercat_skip_ni_ob_bin ;do not supercat ni/ob binary files
+[Thd 25868 CPU 2 12/11/23 15:39:08.237] -dest=path               ;alternate path for output files (must exist)
+[Thd 25868 CPU 2 12/11/23 15:39:08.237] -no_catgt_fld            ;if using -dest, do not create catgt_run subfolder
+[Thd 25868 CPU 2 12/11/23 15:39:08.237] -out_prb_fld             ;if using -dest, create output subfolder per probe
+[Thd 25868 CPU 2 12/11/23 15:39:08.237] ------------------------
+[Thd 25868 CPU 2 12/11/23 15:39:08.237] 
+[Thd 11552 CPU 19 12/11/23 15:41:52.108] Unknown option or wrong param count for option '-'.
+[Thd 11552 CPU 19 12/11/23 15:41:52.108] 
+[Thd 3136 CPU 20 12/11/23 15:42:07.333] Error: Bad g- or t-indices.
+[Thd 3136 CPU 20 12/11/23 15:42:07.334] 
+[Thd 3136 CPU 20 12/11/23 15:42:07.334] *** ERROR: MISSING CRITICAL PARAMETERS ***
+[Thd 3136 CPU 21 12/11/23 15:42:07.335] ------------------------
+[Thd 3136 CPU 21 12/11/23 15:42:07.335] Purpose:
+[Thd 3136 CPU 19 12/11/23 15:42:07.335] + Optionally join trials with given run_name and index ranges [ga,gb] [ta,tb]...
+[Thd 3136 CPU 19 12/11/23 15:42:07.336] + ...Or run on any individual file.
+[Thd 3136 CPU 19 12/11/23 15:42:07.336] + Optionally apply demultiplexing corrections.
+[Thd 3136 CPU 18 12/11/23 15:42:07.336] + Optionally apply band-pass and global CAR filters.
+[Thd 3136 CPU 18 12/11/23 15:42:07.336] + Optionally edit out saturation artifacts.
+[Thd 3136 CPU 18 12/11/23 15:42:07.337] + Optionally extract tables of sync waveform edge times to drive TPrime.
+[Thd 3136 CPU 18 12/11/23 15:42:07.337] + Optionally extract tables of other nonneural event times to be aligned with spikes.
+[Thd 3136 CPU 18 12/11/23 15:42:07.337] + Optionally join the above outputs across different runs (supercat feature).
+
+[Thd 3136 CPU 18 12/11/23 15:42:07.338] Output:
+[Thd 3136 CPU 18 12/11/23 15:42:07.338] + Results are placed next to source, named like this, with t-index = tcat:
+[Thd 3136 CPU 19 12/11/23 15:42:07.338] +    path/run_name_g5_tcat.imec1.ap.bin.
+[Thd 3136 CPU 19 12/11/23 15:42:07.338] + Errors and run messages are appended to CatGT.log in the current working directory.
+
+[Thd 3136 CPU 19 12/11/23 15:42:07.338] Usage:
+[Thd 3136 CPU 19 12/11/23 15:42:07.338] >CatGT -dir=data_dir -run=run_name -g=ga,gb -t=ta,tb <which streams> [ options ]
+
+[Thd 3136 CPU 18 12/11/23 15:42:07.339] Which streams:
+[Thd 3136 CPU 18 12/11/23 15:42:07.339] -ni                      ;required to process ni stream
+[Thd 3136 CPU 18 12/11/23 15:42:07.339] -ob                      ;required to process ob streams
+[Thd 3136 CPU 18 12/11/23 15:42:07.339] -ap                      ;required to process ap streams
+[Thd 3136 CPU 19 12/11/23 15:42:07.339] -lf                      ;required to process lf streams
+[Thd 3136 CPU 18 12/11/23 15:42:07.339] -obx=0,3:5               ;if -ob process these OneBoxes
+[Thd 3136 CPU 18 12/11/23 15:42:07.340] -prb_3A                  ;if -ap or -lf process 3A-style probe files, e.g., run_name_g0_t0.imec.ap.bin
+[Thd 3136 CPU 18 12/11/23 15:42:07.340] -prb=0,3:5               ;if -ap or -lf AND !prb_3A process these probes
+
+[Thd 3136 CPU 18 12/11/23 15:42:07.340] Options:
+[Thd 3136 CPU 19 12/11/23 15:42:07.340] -no_run_fld              ;older data, or data files relocated without a run folder
+[Thd 3136 CPU 18 12/11/23 15:42:07.340] -prb_fld                 ;use folder-per-probe organization
+[Thd 3136 CPU 18 12/11/23 15:42:07.340] -prb_miss_ok             ;instead of stopping, silently skip missing probes
+[Thd 3136 CPU 18 12/11/23 15:42:07.341] -gtlist={gj,tja,tjb}     ;override {-g,-t} giving each listed g-index its own t-range
+[Thd 3136 CPU 19 12/11/23 15:42:07.341] -t=cat                   ;extract events from CatGT output files (instead of -t=ta,tb)
+[Thd 3136 CPU 19 12/11/23 15:42:07.341] -exported                ;apply FileViewer 'exported' tag to in/output filenames
+[Thd 3136 CPU 19 12/11/23 15:42:07.341] -t_miss_ok               ;instead of stopping, zero-fill if trial missing
+[Thd 3136 CPU 19 12/11/23 15:42:07.341] -zerofillmax=500         ;set a maximum zero-fill span (millisec)
+[Thd 3136 CPU 19 12/11/23 15:42:07.341] -startsecs=120.0         ;skip this initial span of each input stream (float seconds)
+[Thd 3136 CPU 19 12/11/23 15:42:07.341] -maxsecs=7.5             ;set a maximum output file length (float seconds)
+[Thd 3136 CPU 19 12/11/23 15:42:07.342] -apfilter=Typ,N,Fhi,Flo  ;apply ap band-pass filter of given {type, order, corners(float Hz)}
+[Thd 3136 CPU 18 12/11/23 15:42:07.342] -lffilter=Typ,N,Fhi,Flo  ;apply lf band-pass filter of given {type, order, corners(float Hz)}
+[Thd 3136 CPU 18 12/11/23 15:42:07.342] -no_tshift               ;DO NOT time-align channels to account for ADC multiplexing
+[Thd 3136 CPU 18 12/11/23 15:42:07.342] -loccar_um=40,140        ;apply ap local CAR annulus (exclude radius, include radius)
+[Thd 3136 CPU 18 12/11/23 15:42:07.342] -loccar=2,8              ;apply ap local CAR annulus (exclude radius, include radius)
+[Thd 3136 CPU 18 12/11/23 15:42:07.342] -gblcar                  ;apply ap global CAR filter over all channels
+[Thd 3136 CPU 18 12/11/23 15:42:07.343] -gbldmx                  ;apply ap global demuxed CAR filter over channel groups
+[Thd 3136 CPU 18 12/11/23 15:42:07.343] -gfix=0.40,0.10,0.02     ;rmv ap artifacts: ||amp(mV)||, ||slope(mV/sample)||, ||noise(mV)||
+[Thd 3136 CPU 18 12/11/23 15:42:07.343] -chnexcl={prb;chans}     ;this probe, exclude listed chans from ap loccar, gblcar, gfix
+[Thd 3136 CPU 18 12/11/23 15:42:07.343] -xa=0,0,2,3.0,4.5,25     ;extract pulse signal from analog chan (js,ip,word,thresh1(V),thresh2(V),millisec)
+[Thd 3136 CPU 18 12/11/23 15:42:07.343] -xd=2,0,384,6,500        ;extract pulse signal from digital chan (js,ip,word,bit,millisec)
+[Thd 3136 CPU 18 12/11/23 15:42:07.343] -xia=0,0,2,3.0,4.5,2     ;inverted version of xa
+[Thd 3136 CPU 18 12/11/23 15:42:07.344] -xid=2,0,384,6,50        ;inverted version of xd
+[Thd 3136 CPU 18 12/11/23 15:42:07.344] -bf=0,0,8,2,4,3          ;extract numeric bit-field from digital chan (js,ip,word,startbit,nbits,inarow)
+[Thd 3136 CPU 18 12/11/23 15:42:07.344] -inarow=5                ;extractor {xa,xd,xia,xid} antibounce stay high/low sample count
+[Thd 3136 CPU 18 12/11/23 15:42:07.344] -no_auto_sync            ;disable the automatic extraction of sync edges in all streams
+[Thd 3136 CPU 22 12/11/23 15:42:07.345] -save=2,0,5,20:60        ;save subset of probe chans (js,ip1,ip2,chan-list)
+[Thd 3136 CPU 20 12/11/23 15:42:07.345] -maxZ=0,0,100            ;probe inserted to given depth (ip,depth-type,depth-value)
+[Thd 3136 CPU 20 12/11/23 15:42:07.345] -pass1_force_ni_ob_bin   ;write pass one ni/ob binary tcat file even if not changed
+[Thd 3136 CPU 20 12/11/23 15:42:07.345] -supercat={dir,run_ga}   ;concatenate existing output files across runs (see ReadMe)
+[Thd 3136 CPU 19 12/11/23 15:42:07.345] -supercat_trim_edges     ;supercat after trimming each stream to matched sync edges
+[Thd 3136 CPU 19 12/11/23 15:42:07.345] -supercat_skip_ni_ob_bin ;do not supercat ni/ob binary files
+[Thd 3136 CPU 19 12/11/23 15:42:07.346] -dest=path               ;alternate path for output files (must exist)
+[Thd 3136 CPU 19 12/11/23 15:42:07.346] -no_catgt_fld            ;if using -dest, do not create catgt_run subfolder
+[Thd 3136 CPU 19 12/11/23 15:42:07.346] -out_prb_fld             ;if using -dest, create output subfolder per probe
+[Thd 3136 CPU 19 12/11/23 15:42:07.346] ------------------------
+[Thd 3136 CPU 19 12/11/23 15:42:07.346] 
+[Thd 25240 CPU 19 12/11/23 15:42:39.647] Cmdline: CatGT -dir=C:/Users/Milner/SynologyDrive/Rob -run=gandalf_20231208 -g=0 -t=0 -prb_fld -ap -prb=0:3
+[Thd 25240 CPU 2 12/11/23 17:25:07.473] 
+[Thd 11816 CPU 18 12/15/23 11:08:34.218] Cmdline: CatGT -dir=D: -run=gandalf_20231214 -g=0 -t=0 -prb_fld -ap -prb=0
+[Thd 11816 CPU 2 12/15/23 11:19:05.289] 
+[Thd 23820 CPU 4 12/15/23 13:17:44.767] Cmdline: CatGT -dir=C:/Users/Milner/SynologyDrive/Rob -run=gandalf_20231208 -g=0 -t=0 -prb_fld -lf -prb=0:3
+[Thd 23820 CPU 27 12/15/23 13:24:15.803] 
+[Thd 20352 CPU 0 12/18/23 16:40:19.849] Unknown option or wrong param count for option '-gfix'.
+[Thd 20352 CPU 0 12/18/23 16:40:19.879] 
+[Thd 17692 CPU 19 12/18/23 16:42:45.675] Unknown option or wrong param count for option '-gfix'.
+[Thd 17692 CPU 0 12/18/23 16:42:45.676] 
+[Thd 19520 CPU 0 12/18/23 16:44:20.511] Unknown option or wrong param count for option '-gfix'.
+[Thd 19520 CPU 0 12/18/23 16:44:20.511] 
+[Thd 20560 CPU 0 12/18/23 16:44:54.652] Cmdline: CatGT -dir=D: -run=gandalf_20231214 -g=0 -t=0 -prb_fld -ap -prb=0
+[Thd 27960 CPU 2 12/18/23 16:53:51.511] Unknown option or wrong param count for option '-gfix'.
+[Thd 27960 CPU 2 12/18/23 16:53:51.512] 
+[Thd 17928 CPU 2 12/18/23 16:54:31.325] Unknown option or wrong param count for option '-gfix'.
+[Thd 17928 CPU 2 12/18/23 16:54:31.326] 
+[Thd 20560 CPU 27 12/18/23 16:55:43.790] 
+[Thd 13428 CPU 18 12/18/23 16:59:33.562] Unknown option or wrong param count for option '-gfix'.
+[Thd 13428 CPU 18 12/18/23 16:59:33.566] 
+[Thd 25392 CPU 19 12/18/23 16:59:47.616] Unknown option or wrong param count for option '-gfix'.
+[Thd 25392 CPU 19 12/18/23 16:59:47.617] 
+[Thd 15056 CPU 18 12/18/23 17:00:41.106] Unknown option or wrong param count for option '-gfix'.
+[Thd 15056 CPU 18 12/18/23 17:00:41.106] 
+[Thd 25516 CPU 19 12/18/23 17:00:47.410] Unknown option or wrong param count for option '-gfix'.
+[Thd 25516 CPU 19 12/18/23 17:00:47.411] 
+[Thd 9664 CPU 18 12/18/23 17:00:57.135] Unknown option or wrong param count for option '-gfix'.
+[Thd 9664 CPU 18 12/18/23 17:00:57.136] 
+[Thd 25052 CPU 18 12/18/23 17:02:11.409] Unknown option or wrong param count for option '-gfix'.
+[Thd 25052 CPU 18 12/18/23 17:02:11.409] 
+[Thd 23184 CPU 18 12/18/23 17:03:37.253] Unknown option or wrong param count for option '-gfix'.
+[Thd 23184 CPU 18 12/18/23 17:03:37.254] 
+[Thd 21704 CPU 19 12/18/23 17:03:48.475] Cmdline: CatGT -dir=D: -run=gandalf_20231214 -g=0 -t=0 -prb_fld -ap -prb=0:2
+[Thd 30624 CPU 0 12/18/23 17:06:13.827] Cmdline: CatGT -dir=C://Users//Milner//SynologyDrive//Rob -run=gandalf_20231214 -g=0 -t=0 -prb_fld -ap -prb=0:3 -gblcar -gfix=0.4,0.1,0.02 -dest=C://Users//Milner//SynologyDrive//Rob//CGT -out_prb_fld
+[Thd 30624 CPU 4 12/18/23 17:06:13.853] Error creating dir 'C://Users//Milner//SynologyDrive//Rob//CGT/catgt_gandalf_20231214_g0'.
+[Thd 30624 CPU 4 12/18/23 17:06:13.853] 
+[Thd 26848 CPU 18 12/18/23 17:06:25.297] Cmdline: CatGT -dir=C://Users//Milner//SynologyDrive//Rob -run=gandalf_20231214 -g=0 -t=0 -prb_fld -ap -prb=0:3 -gblcar -dest=C://Users//Milner//SynologyDrive//Rob//CGT -out_prb_fld
+[Thd 26848 CPU 18 12/18/23 17:06:25.298] Error creating dir 'C://Users//Milner//SynologyDrive//Rob//CGT/catgt_gandalf_20231214_g0'.
+[Thd 26848 CPU 19 12/18/23 17:06:25.298] 
+[Thd 29908 CPU 2 12/18/23 17:06:39.588] Cmdline: CatGT -dir=C://Users//Milner//SynologyDrive//Rob -run=gandalf_20231214 -g=0 -t=0 -prb_fld -ap -prb=0:3 -dest=C://Users//Milner//SynologyDrive//Rob//CGT -out_prb_fld
+[Thd 29908 CPU 2 12/18/23 17:06:39.588] Error creating dir 'C://Users//Milner//SynologyDrive//Rob//CGT/catgt_gandalf_20231214_g0'.
+[Thd 29908 CPU 19 12/18/23 17:06:39.588] 
+[Thd 27300 CPU 2 12/18/23 17:07:55.748] Cmdline: CatGT -dir=D: -run=gandalf_20231214 -g=0 -t=0 -prb_fld -ap -prb=0:2 -gblcar
+[Thd 21704 CPU 0 12/18/23 17:37:42.528] 
+[Thd 27300 CPU 2 12/18/23 18:00:06.267] 
+[Thd 15912 CPU 18 12/20/23 12:09:45.295] Cmdline: CatGT -dir=D: -run=gandalf_20231208 -g=0 -t=0 -prb_fld -ap -prb=0:3 -gblcar
+[Thd 15912 CPU 24 12/20/23 12:52:25.475] 
+[Thd 22348 CPU 19 12/26/23 11:27:16.940] Cmdline: CatGT -dir=D: -run=gandalf_20231223 -g=0 -t=0 -prb_fld -ap -prb=0:3 -gblcar
+[Thd 22348 CPU 2 12/26/23 12:30:34.288] 
+[Thd 15280 CPU 18 1/10/24 10:05:33.872] Unknown option or wrong param count for option '-glbcar'.
+[Thd 15280 CPU 18 1/10/24 10:05:33.884] 
+[Thd 24336 CPU 18 1/10/24 10:10:55.674] Unknown option or wrong param count for option 'C:\Users\Milner\SynologyDrive\Rob\gandalf_20240109'.
+[Thd 24336 CPU 18 1/10/24 10:10:55.675] 
+[Thd 22168 CPU 18 1/10/24 10:11:04.199] Cmdline: CatGT -dir=Y:/jic/Susu_datasets -run=SC011_022219 -g=0 -t=0,570 -prb_fld -t_miss_ok -ap -prb=2 -apfilter=butter,12,300,9000 -gblcar -gfix=0.4,0.1,0.02 -dest=Y:/jic/Susu_datasets/SC011_022219_g0
+[Thd 22168 CPU 18 1/10/24 10:11:04.200] Error creating dir 'Y:/jic/Susu_datasets/SC011_022219_g0/catgt_SC011_022219_g0'.
+[Thd 22168 CPU 18 1/10/24 10:11:04.200] 
+[Thd 24136 CPU 19 1/10/24 10:12:08.724] Unknown option or wrong param count for option 'C:\Users\Milner\SynologyDrive\Rob\gandalf_20240109'.
+[Thd 24136 CPU 19 1/10/24 10:12:08.725] 
+[Thd 16824 CPU 19 1/10/24 10:12:49.734] Cmdline: CatGT -dir=C:/Users/Milner/SynologyDrive/Rob/gandalf_20240109 -run=gandalf_20240109 -g=0 -t=0 -prb_fld -ap -prb=0:2 -gblcar -dest=C:/Users/Milner/SynologyDrive/Rob
+[Thd 22644 CPU 4 1/10/24 10:14:22.285] Unknown option or wrong param count for option '-glbcar'.
+[Thd 22644 CPU 4 1/10/24 10:14:22.285] 
+[Thd 12076 CPU 8 1/10/24 10:15:22.687] Cmdline: CatGT -dir=E: -run=gandalf_20240109 -g=1 -t=0 -prb_fld -ap -prb=0:2 -gblcar
+[Thd 16824 CPU 0 1/10/24 10:28:17.029] 
+[Thd 12480 CPU 0 1/10/24 10:31:13.718] Cmdline: CatGT -dir=E: -run=gandalf_20240109 -g=0 -t=0 -prb_fld -ap -prb=0:2 -gblcar -dest=E:/CGT
+[Thd 12480 CPU 0 1/10/24 10:31:13.719] Error creating dir 'E:/CGT/catgt_gandalf_20240109_g0'.
+[Thd 12480 CPU 0 1/10/24 10:31:13.719] 
+[Thd 3320 CPU 4 1/10/24 10:31:27.604] Cmdline: CatGT -dir=E: -run=gandalf_20240109 -g=0 -t=0 -prb_fld -ap -prb=0:2 -gblcar -dest=E:/CGT
+[Thd 3320 CPU 2 1/10/24 10:37:07.653] 
+[Thd 14620 CPU 18 1/10/24 10:40:28.805] Cmdline: CatGT -dir=E: -run=gandalf_20240109 -g=1 -t=0 -prb_fld -ap -prb=0:2 -gblcar -dest=E:/CGT -out_prb_fld
+[Thd 21320 CPU 0 1/10/24 11:00:58.259] Cmdline: CatGT -dir=E: -run=gandalf_20240109 -g=0 -t=0 -prb_fld -ap -prb=0:2 -gblcar
+[Thd 21320 CPU 2 1/10/24 11:06:28.903] 
+[Thd 15116 CPU 6 1/10/24 11:15:13.459] Cmdline: CatGT -dir=E: -run=gandalf_20240109 -g=1 -t=0 -prb_fld -ap -prb=0:2 -gblcar
+[Thd 8420 CPU 2 1/10/24 11:24:00.125] Cmdline: CatGT -dir=E: -run=gandalf_20240109 -g=1 -t=0 -prb_fld -ap -prb=0:2 -gblcar
+[Thd 14620 CPU 4 1/10/24 11:48:12.240] 
+[Thd 26344 CPU 20 1/10/24 11:56:26.737] Cmdline: CatGT -dir=E: -run=gandalf_20240109 -g=0 -t=0 -prb_fld -ap -prb=0:2 -gblcar
+[Thd 26344 CPU 2 1/10/24 12:01:50.866] 
+[Thd 19544 CPU 0 1/10/24 12:09:36.879] Cmdline: CatGT -dir=E: -run=gandalf_20240109 -g=1 -t=0 -prb_fld -ap -prb=0:2 -gblcar
+[Thd 19544 CPU 2 1/10/24 13:34:38.587] 
+[Thd 23952 CPU 2 1/14/24 22:19:24.428] Cmdline: CatGT -dir=D: -run=gandalf_20240112 -g=0 -t=0 -prb_fld -ap -prb=0:2 -gblcar
+[Thd 23952 CPU 0 1/14/24 23:06:15.865] 
+[Thd 22656 CPU 0 1/15/24 17:22:25.984] Cmdline: CatGT -dir=E: -run=gandalf_20240112 -g=0 -t=0 -prb_fld -ap -prb=0:3 -gblcar
+[Thd 7104 CPU 2 1/15/24 18:35:32.161] Cmdline: CatGT -dir=E: -run=gandalf_20240112 -g=0 -t=0 -prb_fld -ap -prb=0:3 -gblcar
+[Thd 7104 CPU 0 1/15/24 19:38:33.851] 
+[Thd 13264 CPU 0 1/16/24 02:19:59.010] Cmdline: CatGT -dir=D: -run=gandalf_20240115 -g=0 -t=0 -prb_fld -ap -prb=0:3 -gblcar
+[Thd 13264 CPU 0 1/16/24 03:40:51.907] 
+[Thd 26572 CPU 0 1/22/24 15:47:01.303] Cmdline: CatGT -dir=E: -run=gandalf_20240112 -g=0 -t=0 -prb_fld -ap -prb=0:3 -gblcar
+[Thd 26572 CPU 25 1/22/24 16:51:11.010] 
+[Thd 29024 CPU 18 1/22/24 19:20:47.109] Cmdline: CatGT -dir=D: -run=gandalf_20240115 -g=0 -t=0 -prb_fld -ap -prb=0:3 -gblcar
+[Thd 31052 CPU 4 1/22/24 19:21:57.653] Cmdline: CatGT -dir=D: -run=gandalf_20240115 -g=0 -t=0 -prb_fld -ap -prb=0:3 -gblcar
+[Thd 31052 CPU 30 1/22/24 20:42:19.525] 
+[Thd 14244 CPU 2 1/23/24 09:31:26.863] Cmdline: CatGT -dir=D: -run=gandalf_20240115 -g=0 -t=0 -prb_fld -ap -prb=0:3 -gblcar
+[Thd 14244 CPU 25 1/23/24 10:53:19.891] 
+[Thd 17480 CPU 18 1/26/24 22:17:04.751] Cmdline: CatGT -dir=E: -run=gandalf_20240126 -g=0 -t=0 -prb_fld -ap -prb=0:1 -gblcar
+[Thd 17480 CPU 24 1/26/24 23:00:13.672] 
