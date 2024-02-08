@@ -40,7 +40,7 @@ dest_folder = "C:\\Users\\Milner\\SynologyDrive\\Rob\\%s_%s_%s";
 runKilosort = 0; %1=run, 0=don't run (default 1)
 
 % run CatGT
-runCatGT = 0;  % 1=run, 0=don't run (default 1)
+runCatGT = 1;  % 1=run, 0=don't run (default 1)
 
 % CatGT prb field (only relevant with runCatGT = 1)
 cat_prb_fld = '0:3';          % see CatGT ReadMe for more details (default '0:3')
@@ -106,20 +106,27 @@ for folder = 1:length(sessionFolders)
 
     sessionPath = fullfile(root, sessionFolder);
     imecDirs = dir(sessionPath);
+    % for TPrime
+    tprime_struct = struct(...
+        'nidq_tcat', '',...
+        'imec_tcat_list', [],...
+        'spiketime_sec_files', []...
+    );
     
     % dest folder
     destFolder = sprintf(dest_folder, monkey, date, gNum);  
 
     %% Run CatGT
+    ni_tcat = '';
     if runCatGT == 1
         fprintf('Running CatGT on %s\n', sessionFolder);
         cd(fullfile(kilosortFolder, "CatGT-win/"));
-        % catGTCommand = sprintf('runit.bat -dir=%s -run=%s_%s -prb_fld -dest=%s -g=%s -t=0  -prb=0:2 -ap -gblcar',...
-        %                 root, monkey, date, root, gNum(2));
-        catGTCommand = sprintf('runit.bat -dir=%s -run=%s_%s -prb_fld -g=%s -t=0  -prb=%s -ap -gblcar',...
+        catGTCommand = sprintf('runit.bat -dir=%s -run=%s_%s -prb_fld -g=%s -t=0 -ni -prb=%s -ap -gblcar',...
                         root, monkey, date, gNum(2), cat_prb_fld);
         fprintf('  Bash command: %s\n', catGTCommand)
-        system(catGTCommand);
+        % system(catGTCommand);
+        % find name of tcat.nidq.xd with .txt extension
+        tprime_struct.nidq_tcat = dir(fullfile(sessionPath, '*tcat.nidq.xd*.txt'));
     else
         fprintf('Not running CatGT\n');
     end
@@ -176,7 +183,6 @@ for folder = 1:length(sessionFolders)
         end
         
         % find the binary file
-        % fs          = [dir(fullfile(rootZ, '*.bin')) dir(fullfile(rootZ, '*.dat'))];
         fs          = [dir(fullfile(rootZ, '*.bin'))];
         if isempty(fs); fprintf('\tNo binary files found...\n'); continue; end
         
@@ -192,6 +198,10 @@ for folder = 1:length(sessionFolders)
     
             ops.fbinary = fullfile(rootZ, fileName);
             fprintf('\tBinary file found: %s \n', fileName)
+            fprintf('\t  Reading meta file...\n')
+            metaFile = SGLX_readMeta.ReadMeta(fileName, rootZ);
+            sample_rate = str2double(metaFile.imSampRate);
+            fprintf('\t\t Sampling rate: %.2f\n',sample_rate)
     
             % perform on CatGT output as well?
             catMatch = regexp(fileName, catPattern, 'match', 'once');
@@ -214,7 +224,7 @@ for folder = 1:length(sessionFolders)
             
             % run Kilosort
             if runKilosort
-                ks_time = tic;
+                tic;
                 fprintf('\tRunning Kilosort...\n');
                 rez                = preprocessDataSub(ops);
                 % rez                = datashift2(rez, 1);
@@ -229,8 +239,8 @@ for folder = 1:length(sessionFolders)
                 % save to destination folder
     
                 rezToPhy2(rez, finalDestFolder);
-                toc = 
-                fprintf('\tKilosort complete %\n');
+                fprintf('\tKilosort complete in %d sec.\n', toc);
+                
             end
             fprintf('\tDestination Folder: %s \n', finalDestFolder)
     
@@ -243,6 +253,14 @@ for folder = 1:length(sessionFolders)
                     delete(catgt_path);
                 end
             end
+            % add tcat_imecN.ap.xd*.txt output to imec_tcat_list
+            tcat_imec_str = sprintf("*tcat.%s.ap.xd*.txt", imecNum);
+            tcat_imec = dir(fullfile(rootZ, tcat_imec_str));
+            tcat_imec_path = fullfile(rootZ, tcat_imec.name);
+            % convert to string
+            tcat_imec_path = string(tcat_imec_path);
+            % append string to imec_tcat_list without combining the strings
+            tprime_struct.imec_tcat_list = [tprime_struct.imec_tcat_list, tcat_imec_path];
 
             % run extract_waveforms.bat on temp_wh.dat (or temp_wh_cat.dat) file
             if extract_waveforms
@@ -253,13 +271,46 @@ for folder = 1:length(sessionFolders)
                system(extractCommand);
             end
 
-            % run TPrime
-            if runTPrime
-                fprintf('Running TPrime...\n')
-            end
-
             % delete temp_wh.dat file
             if deleteTemp; fprintf('\tDeleting temp_wh.dat...\n'); delete(ops.fproc); end
+            
+            % if TPrime, convert spike times to seconds
+            if runTPrime
+                fprintf('\tConverting spike times to seconds...\n')
+                spike_times = readNPY(fullfile(finalDestFolder, 'spike_times.npy'));
+                % keep precision to maximum decimal places
+                spike_times_sec = double(spike_times) / sample_rate;
+                % write to file with each spike time on a new line
+                spike_times_sec_file = fullfile(finalDestFolder, "spike_times_sec.txt");
+                fileID = fopen(spike_times_sec_file, 'w');
+                fprintf(fileID, '%f\n', spike_times_sec);
+                fprintf('\t\tGenerating %s\n', spike_times_sec_file)
+                fprintf('\t\tDone.\n')
+                tprime_struct.spiketime_sec_files = [tprime_struct.spiketime_sec_files, spike_times_sec_file];
+            end
+        end
+    end
+
+    % run TPrime
+    if runTPrime && ~isempty(tprime_struct.nidq_tcat)
+        fprintf('Running TPrime on %s\n', sessionFolder)
+        cd(fullfile(kilosortFolder, "TPrime-win/"));
+        TPrimeCommand = sprintf('runit.bat -syncperiod=1.0 -tostream=%s',...
+                        fullfile(sessionPath, tprime_struct.nidq_tcat.name));
+        if ~isempty(tprime_struct.imec_tcat_list) && length(tprime_struct.imec_tcat_list) == length(tprime_struct.spiketime_sec_files)
+            for j = 1:length(tprime_struct.imec_tcat_list)
+                tprime_imec_tcat = tprime_struct.imec_tcat_list(j);
+                tprime_sec_file = tprime_struct.spiketime_sec_files(j);
+                % output file name
+                tprime_sec_final = strrep(tprime_sec_file, '.txt', '_adj.txt');
+                TPrimeCommand = strcat(TPrimeCommand, sprintf(' -fromstream=%d,%s', j, tprime_imec_tcat));
+                TPrimeCommand = strcat(TPrimeCommand, sprintf(' -events=%d,%s,%s', j, tprime_sec_file, tprime_sec_final));
+            end
+            % system command for TPrime
+            fprintf('  Bash command: %s\n', TPrimeCommand)
+            system(TPrimeCommand)
+        else
+            fprintf('TPrime not running. Check tprime_struct - imec_tcat_list or spiketime_sec_files');
         end
     end
 end

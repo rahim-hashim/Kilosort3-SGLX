@@ -31,3 +31,38 @@
 [Thd 22256 CPU 18 2/08/24 11:37:06.835] 
 [Thd 18876 CPU 23 2/08/24 11:37:18.619] Cmdline: TPrime -syncperiod=1.000000 -tostream=C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.nidq.xd_8_0_500.txt -fromstream=1,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.imec0.ap.xd_384_6_500.txt -events=1,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec0_sec.npy,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec0_sec_adj.txt
 [Thd 18876 CPU 2 2/08/24 11:37:19.524] 
+[Thd 25516 CPU 18 2/08/24 13:05:03.597] Cmdline: TPrime -syncperiod=1.000000 -tostream=C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.nidq.xd_8_0_500.txt -fromstream=1,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.imec0.ap.xd_384_6_500.txt -events=1,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec0_sec.npy,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec0_sec_adj.txt
+[Thd 25516 CPU 0 2/08/24 13:05:04.601] 
+[Thd 15372 CPU 4 2/08/24 13:05:04.745] Cmdline: TPrime -syncperiod=1.000000 -tostream=C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.nidq.xd_8_0_500.txt -fromstream=1,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.imec0.ap.xd_384_6_500.txt -events=1,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec0_sec.npy,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec0_sec_adj.txt
+[Thd 15372 CPU 0 2/08/24 13:05:05.638] 
+[Thd 2880 CPU 2 2/08/24 13:29:31.931] Cmdline: TPrime -syncperiod=1.000000 -tostream=C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.nidq.xd_8_0_500.txt -fromstream=1,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.imec0.ap.xd_384_6_500.txt -events=1,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec0_sec.npy,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec0_sec_adj.txt
+[Thd 2880 CPU 4 2/08/24 13:29:32.918] 
+[Thd 9656 CPU 2 2/08/24 13:29:32.985] Cmdline: TPrime -syncperiod=1.000000 -tostream=C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.nidq.xd_8_0_500.txt -fromstream=1,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.imec0.ap.xd_384_6_500.txt -events=1,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec0_sec.npy,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec0_sec_adj.txt
+[Thd 9656 CPU 0 2/08/24 13:29:33.906] 
+[Thd 23876 CPU 4 2/08/24 13:33:22.461] Cmdline: TPrime -syncperiod=1.000000 -tostream=C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.nidq.xd_8_0_500.txt -fromstream=1,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.imec0.ap.xd_384_6_500.txt -events=1,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec0_sec.npy,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec0_sec_adj.txt
+[Thd 23876 CPU 0 2/08/24 13:33:23.366] 
+[Thd 17764 CPU 18 2/08/24 16:02:51.736] Did not understand option '-events,1,D:\gandalf_20240115_g0\gandalf_20240115_g0_imec0\gandalf_20240115_g0_imec0_ks_cat\spike_times_sec.txt,_adj.txt'
+[Thd 17764 CPU 18 2/08/24 16:02:51.737] 
+[Thd 24580 CPU 4 2/08/24 16:13:28.713] Did not understand option '-events,1,D:\gandalf_20240115_g0\gandalf_20240115_g0_imec0\gandalf_20240115_g0_imec0_ks_cat\spike_times_sec.txt,D:\gandalf_20240115_g0\gandalf_20240115_g0_imec0\gandalf_20240115_g0_imec0_ks_cat\spike_times_sec_adj.txt'
+[Thd 24580 CPU 4 2/08/24 16:13:28.714] 
+[Thd 30952 CPU 19 2/08/24 16:22:46.430] 
+[Thd 30952 CPU 19 2/08/24 16:22:46.431] *** ERROR: MISSING CRITICAL PARAMETERS ***
+
+[Thd 30952 CPU 18 2/08/24 16:22:46.431] ------------------------
+[Thd 30952 CPU 20 2/08/24 16:22:46.432] Purpose:
+[Thd 30952 CPU 20 2/08/24 16:22:46.432] + Map from-stream event times into to-stream times.
+[Thd 30952 CPU 20 2/08/24 16:22:46.432] Run messages are appended to TPrime.log in the current working directory.
+
+[Thd 30952 CPU 18 2/08/24 16:22:46.433] Usage:
+[Thd 30952 CPU 18 2/08/24 16:22:46.433] >TPrime -syncperiod=1.0 -tostream=path/edgefile.txt <from_data> [ options ]
+
+[Thd 30952 CPU 18 2/08/24 16:22:46.433] From_data:
+[Thd 30952 CPU 18 2/08/24 16:22:46.434] -fromstream=5,path/edgefile.txt                        ;stream_index,edge_times
+[Thd 30952 CPU 19 2/08/24 16:22:46.434] -events=5,path/in_eventfile.txt,path/out_eventfile.txt ;stream_index,in_event_times,out_event_times
+[Thd 30952 CPU 19 2/08/24 16:22:46.434] ------------------------
+
+[Thd 30952 CPU 18 2/08/24 16:22:46.435] 
+[Thd 9152 CPU 6 2/08/24 16:24:01.026] Did not understand option '-events,1,D:\gandalf_20240115_g0\gandalf_20240115_g0_imec0\gandalf_20240115_g0_imec0_ks_cat\spike_times_sec.txt,D:\gandalf_20240115_g0\gandalf_20240115_g0_imec0\gandalf_20240115_g0_imec0_ks_cat\spike_times_sec_adj.txt'
+[Thd 9152 CPU 6 2/08/24 16:24:01.027] 
+[Thd 10392 CPU 6 2/08/24 16:26:14.611] Cmdline: TPrime -syncperiod=1.000000 -tostream=D:/gandalf_20240115_g0/gandalf_20240115_g0_tcat.nidq.xd_8_0_500.txt -fromstream=1,D:/gandalf_20240115_g0/gandalf_20240115_g0_imec0/gandalf_20240115_g0_tcat.imec0.ap.xd_384_6_500.txt -fromstream=2,D:/gandalf_20240115_g0/gandalf_20240115_g0_imec1/gandalf_20240115_g0_tcat.imec1.ap.xd_384_6_500.txt -events=1,D:/gandalf_20240115_g0/gandalf_20240115_g0_imec0/gandalf_20240115_g0_imec0_ks_cat/spike_times_sec.txt,D:/gandalf_20240115_g0/gandalf_20240115_g0_imec0/gandalf_20240115_g0_imec0_ks_cat/spike_times_sec_adj.txt -events=2,D:/gandalf_20240115_g0/gandalf_20240115_g0_imec1/gandalf_20240115_g0_imec1_ks_cat/spike_times_sec.txt,D:/gandalf_20240115_g0/gandalf_20240115_g0_imec1/gandalf_20240115_g0_imec1_ks_cat/spike_times_sec_adj.txt
+[Thd 10392 CPU 0 2/08/24 16:26:22.607] 

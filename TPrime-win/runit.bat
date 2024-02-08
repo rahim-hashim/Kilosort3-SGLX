@@ -21,21 +21,12 @@
 :: -fromstream=7,Y:\tptest\time_trans_01_g0_tcat.nidq.XA_0_500.txt ^
 :: -events=7,Y:\tptest\time_trans_01_g0_tcat.nidq.XA_1_7700.txt,Y:\tptest\out.txt
 
-
 @REM set LOCALARGS=-syncperiod=1.0 ^
 @REM -tostream=C:\Users\Milner\OneDrive\Desktop\gandalf_20240126_Tprime_test\gandalf_20240126_g0_tcat.nidq.xd_8_0_500.txt ^
 @REM -fromstream=1,C:\Users\Milner\OneDrive\Desktop\gandalf_20240126_Tprime_test\gandalf_20240126_g0_tcat.imec0.ap.xd_384_6_500.txt ^
 @REM -fromstream=2,C:\Users\Milner\OneDrive\Desktop\gandalf_20240126_Tprime_test\gandalf_20240126_g0_tcat.imec1.ap.xd_384_6_500.txt ^
 @REM -events=1,C:\Users\Milner\OneDrive\Desktop\gandalf_20240126_Tprime_test\spike_times_imec0.npy,C:\Users\Milner\OneDrive\Desktop\gandalf_20240126_Tprime_test\spike_times_imec0_adj.txt ^
 @REM -events=2,C:\Users\Milner\OneDrive\Desktop\gandalf_20240126_Tprime_test\spike_times_imec1.npy,C:\Users\Milner\OneDrive\Desktop\gandalf_20240126_Tprime_test\spike_times_imec1_adj.txt
-
-echo "Running TPrime with the following parameters:"
-
-set LOCALARGS=-syncperiod=1.0 ^
--tostream=C:\Users\Milner\OneDrive\Desktop\gandalf_20240126_Tprime_test\gandalf_20240126_g0_tcat.nidq.xd_8_0_500.txt ^
--fromstream=1,C:\Users\Milner\OneDrive\Desktop\gandalf_20240126_Tprime_test\gandalf_20240126_g0_tcat.imec0.ap.xd_384_6_500.txt ^
--events=1,C:\Users\Milner\OneDrive\Desktop\gandalf_20240126_Tprime_test\spike_times_imec0_sec.npy,C:\Users\Milner\OneDrive\Desktop\gandalf_20240126_Tprime_test\spike_times_imec0_sec_adj.txt
-
 
 if [%1]==[] (set ARGS=%LOCALARGS%) else (set ARGS=%*)
 
