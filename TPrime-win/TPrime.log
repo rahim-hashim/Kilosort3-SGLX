@@ -1,0 +1,33 @@
+[Thd 16264 CPU 19 2/08/24 10:47:10.407] To file does not exist: [Y:/tptest/time_trans_01_g0_tcat.imec0.ap.SY_301_6_500.txt]
+[Thd 16264 CPU 23 2/08/24 10:47:10.408] 
+[Thd 3148 CPU 18 2/08/24 11:01:10.756] Cmdline: TPrime -syncperiod=1.000000 -tostream=C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.nidq.xd_8_0_500.txt -fromstream=1,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.imec0.ap.xd_384_6_500.txt -fromstream=2,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.imec1.ap.xd_384_6_500.txt -events=1,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec0.npy,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec0_adj.npy -events=2,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec1.npy,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec1_adj.npy
+[Thd 3148 CPU 2 2/08/24 11:01:11.035] 
+[Thd 30488 CPU 18 2/08/24 11:01:35.751] Cmdline: TPrime -syncperiod=1.000000 -tostream=C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.nidq.xd_8_0_500.txt -fromstream=1,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.imec0.ap.xd_384_6_500.txt -fromstream=2,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.imec1.ap.xd_384_6_500.txt -events=1,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec0.npy,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec0_adj.txt -events=2,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec1.npy,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec1_adj.txt
+[Thd 30488 CPU 6 2/08/24 11:01:40.907] 
+[Thd 22856 CPU 18 2/08/24 11:25:56.536] Cmdline: TPrime -syncperiod=1.000000 -tostream=C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.nidq.xd_8_0_500.txt -fromstream=1,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.imec0.ap.xd_384_6_500.txt -fromstream=2,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.imec1.ap.xd_384_6_500.txt -events=1,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec0.npy,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec0_adj.txt -events=2,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec1.npy,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec1_adj.txt
+[Thd 22856 CPU 6 2/08/24 11:26:01.089] 
+[Thd 7004 CPU 0 2/08/24 11:33:38.346] Did not understand option 'C:\Users\Milner\OneDrive\Desktop\gandalf_20240126_Tprime_test\spike_times_imec0_sec.npy,C:\Users\Milner\OneDrive\Desktop\gandalf_20240126_Tprime_test\spike_times_imec0_sec_adj.txt'
+[Thd 7004 CPU 0 2/08/24 11:33:38.347] 
+[Thd 17468 CPU 18 2/08/24 11:34:13.636] Did not understand option 'C:\Users\Milner\OneDrive\Desktop\gandalf_20240126_Tprime_test\spike_times_imec0_sec.npy,C:\Users\Milner\OneDrive\Desktop\gandalf_20240126_Tprime_test\spike_times_imec0_sec_adj.txt'
+[Thd 17468 CPU 18 2/08/24 11:34:13.637] 
+[Thd 26132 CPU 2 2/08/24 11:35:41.210] Did not understand option '-events=1,'
+[Thd 26132 CPU 2 2/08/24 11:35:41.210] 
+[Thd 22256 CPU 18 2/08/24 11:37:06.832] 
+[Thd 22256 CPU 18 2/08/24 11:37:06.833] *** ERROR: MISSING CRITICAL PARAMETERS ***
+
+[Thd 22256 CPU 18 2/08/24 11:37:06.833] ------------------------
+[Thd 22256 CPU 18 2/08/24 11:37:06.833] Purpose:
+[Thd 22256 CPU 18 2/08/24 11:37:06.833] + Map from-stream event times into to-stream times.
+[Thd 22256 CPU 18 2/08/24 11:37:06.833] Run messages are appended to TPrime.log in the current working directory.
+
+[Thd 22256 CPU 18 2/08/24 11:37:06.833] Usage:
+[Thd 22256 CPU 18 2/08/24 11:37:06.834] >TPrime -syncperiod=1.0 -tostream=path/edgefile.txt <from_data> [ options ]
+
+[Thd 22256 CPU 18 2/08/24 11:37:06.834] From_data:
+[Thd 22256 CPU 18 2/08/24 11:37:06.834] -fromstream=5,path/edgefile.txt                        ;stream_index,edge_times
+[Thd 22256 CPU 18 2/08/24 11:37:06.834] -events=5,path/in_eventfile.txt,path/out_eventfile.txt ;stream_index,in_event_times,out_event_times
+[Thd 22256 CPU 18 2/08/24 11:37:06.834] ------------------------
+
+[Thd 22256 CPU 18 2/08/24 11:37:06.835] 
+[Thd 18876 CPU 23 2/08/24 11:37:18.619] Cmdline: TPrime -syncperiod=1.000000 -tostream=C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.nidq.xd_8_0_500.txt -fromstream=1,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/gandalf_20240126_g0_tcat.imec0.ap.xd_384_6_500.txt -events=1,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec0_sec.npy,C:/Users/Milner/OneDrive/Desktop/gandalf_20240126_Tprime_test/spike_times_imec0_sec_adj.txt
+[Thd 18876 CPU 2 2/08/24 11:37:19.524] 

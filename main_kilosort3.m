@@ -7,6 +7,7 @@
 % 1/22/2024  - added extract_waveform.bat functionality to generate
 % waveform and templateview before deleting temp.wh
 % 1/23/2024  - updated data_shift, trackAndSort and make_fig to save KS output figures
+% 2/28/2024  - added TPrime
 
 kilosortFolder = 'C:\Users\Milner\OneDrive\Desktop\Kilosort-3';
 addpath(genpath(kilosortFolder)) % path to kilosort folder
@@ -18,16 +19,16 @@ pathToYourConfigFile = 'C:\Users\Milner\OneDrive\Desktop\Kilosort-3\configFiles'
 chanMapFile = 'neuropixels_NHP_channel_map_linear_v1.mat'; % NHP linear channel map
 
 %% SET SESSION IDENTIFIERS 
-root = 'E:';
+root = 'D:';
 % set date
-date = '20240126';      % YYYYMMDD
+date = '20240115';      % YYYYMMDD
 % set monkey
 monkey = 'gandalf';     % lower case
 
 %% SET KILOSORT PARAMETERS
 
 % set specific probe
-probes = [0, 1];        % if empty, include all probes, or specify [0, 1..]
+probes = [0,1,2,3];        % if empty, include all probes, or specify [0, 1..]
 
 % set specific session
 sessionNum = [0];             % if empty, include all sessions [g0, g1..], or specify
@@ -36,10 +37,10 @@ sessionNum = [0];             % if empty, include all sessions [g0, g1..], or sp
 dest_folder = "C:\\Users\\Milner\\SynologyDrive\\Rob\\%s_%s_%s";
 
 % run CatGT
-runCatGT = 0;  % 1=run, 0=don't run (default 1)
+runCatGT = 1;  % 1=run, 0=don't run (default 1)
 
 % CatGT prb field (only relevant with runCatGT = 1)
-cat_prb_fld = '0:1';          % see CatGT ReadMe for more details (default '0:3')
+cat_prb_fld = '0:3';          % see CatGT ReadMe for more details (default '0:3')
 
 % perform Kilosort on CatGT output
 includeCatGT = 2; % 0=do not include, 1=both non-CatGT+CatGT, 2=only CatGT (default 2)
@@ -51,7 +52,10 @@ extract_waveforms = 1; %1=run extract-waveforms, 0=dont run extract-waveforms
 deleteCATbin = 1; % 1=delete, 0 save (default 1)
 
 % delete temp_wh.dat after running KS to save space
-deleteTemp = 0;   % 1=delete, 0=save (default 1)
+deleteTemp = 1;   % 1=delete, 0=save (default 1)
+
+% run TPrime
+runTPrime = 1;    % 1=run TPrime, 0=dont run TPrime 
 
 %% find session directory
 
@@ -195,7 +199,7 @@ for folder = 1:length(sessionFolders)
             end
             
             % make directory for all ks output
-            if ~exist(finalDestFolder)
+            if ~exist(finalDestFolder, "dir")
                 mkdir(finalDestFolder)
             end
 
@@ -221,11 +225,13 @@ for folder = 1:length(sessionFolders)
             fprintf('\tDestination Folder: %s \n', finalDestFolder)
     
             % delete CatGT bin output after running
-            if runCatGT == 1 && deleteCATbin == 1
+            if deleteCATbin == 1
                 fprintf('\tDeleting CatGT output...\n');
                 catgt_output = sprintf('%s_tcat.%s.ap.bin', sessionFolder, imecNum);
                 catgt_path = fullfile(rootZ, catgt_output);
-                delete(catgt_path);
+                if exist(catgt_path, "file")
+                    delete(catgt_path);
+                end
             end
 
             % run extract_waveforms.bat on temp_wh.dat (or temp_wh_cat.dat) file
@@ -235,6 +241,11 @@ for folder = 1:length(sessionFolders)
                                                         finalDestFolder);
                fprintf('  Bash command: %s\n', extractCommand)
                system(extractCommand);
+            end
+
+            % run TPrime
+            if runTPrime
+                %pass
             end
 
             % delete temp_wh.dat file
