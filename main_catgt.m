@@ -9,9 +9,9 @@ chanMapFile = 'neuropixels_NHP_channel_map_linear_v1.mat'; % NHP linear channel 
 
 %% SET SESSION IDENTIFIERS 
 % root = 'D:';
-root = 'C:\SGL_DATA';
+root = 'E:';
 % set date
-date = '20240126';      % YYYYMMDD
+date = '20230126';      % YYYYMMDD
 % set monkey
 monkey = 'gandalf';     % lower case
 % only perform catgt on ni
@@ -90,10 +90,13 @@ for folder = 1:length(sessionFolders)
     cd(fullfile(kilosortFolder, "CatGT-win/"));
     % catGTCommand = sprintf('runit.bat -dir=%s -run=%s_%s -prb_fld -dest=%s -g=%s -t=0  -prb=0:2 -ap -gblcar',...
     %                 root, monkey, date, root, gNum(2));
-    % catGTCommand = sprintf('runit.bat -dir=%s -run=%s_%s -prb_fld -g=%s -t=0  -prb=%s -ap -gblcar',...
-    %                 root, monkey, date, gNum(2), cat_prb_fld);
-    catGTCommand = sprintf('runit.bat -dir=%s -run=%s_%s -ni -g=%s -t=0',...
-                    root, monkey, date, gNum(2));
+    if ni_only
+        catGTCommand = sprintf('runit.bat -dir=%s -run=%s_%s -ni -g=%s -t=0',...
+                    root, monkey, date, gNum(2));    
+    else
+        catGTCommand = sprintf('runit.bat -dir=%s -run=%s_%s -prb_fld -g=%s -t=0  -prb=%s -ap -gblcar',...
+                        root, monkey, date, gNum(2), cat_prb_fld);
+    end
     fprintf('  Bash command: %s\n', catGTCommand)
     system(catGTCommand);
     

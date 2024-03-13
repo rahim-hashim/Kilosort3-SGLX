@@ -7,7 +7,8 @@
 % 1/22/2024  - added extract_waveform.bat functionality to generate
 % waveform and templateview before deleting temp.wh
 % 1/23/2024  - updated data_shift, trackAndSort and make_fig to save KS output figures
-% 2/28/2024  - added TPrime
+% 1/28/2024  - added TPrime
+% 2/14/2024  - write adjusted .npy spiketimes to ks folder
 
 kilosortFolder = 'C:\Users\Milner\OneDrive\Desktop\Kilosort-3';
 addpath(genpath(kilosortFolder)) % path to kilosort folder
@@ -19,16 +20,18 @@ pathToYourConfigFile = 'C:\Users\Milner\OneDrive\Desktop\Kilosort-3\configFiles'
 chanMapFile = 'neuropixels_NHP_channel_map_linear_v1.mat'; % NHP linear channel map
 
 %% SET SESSION IDENTIFIERS 
-root = 'D:';
+% root = 'D:';
+% root = 'C:\Users\Milner\SynologyDrive\Rob\gandalf_20231223';
+root = 'C:\SGL_DATA\';
 % set date
-date = '20240115';      % YYYYMMDD
+date = '20231223';      % YYYYMMDD
 % set monkey
 monkey = 'gandalf';     % lower case
 
 %% SET KILOSORT PARAMETERS
 
 % set specific probe
-probes = [0,1,2,3];        % if empty, include all probes, or specify [0, 1..]
+probes = [0,1,2];        % if empty, include all probes, or specify [0, 1..]
 
 % set specific session
 sessionNum = [0];             % if empty, include all sessions [g0, g1..], or specify
@@ -37,19 +40,20 @@ sessionNum = [0];             % if empty, include all sessions [g0, g1..], or sp
 dest_folder = "C:\\Users\\Milner\\SynologyDrive\\Rob\\%s_%s_%s";
 
 % run Kilosort
-runKilosort = 0; %1=run, 0=don't run (default 1)
+runKilosort4 = 1; %1=run, 0=don't run (default 1)
+runKilosort3 = 0; %1=run, 0=don't run (default 0 if runKilosort4 = 1)
 
 % run CatGT
 runCatGT = 1;  % 1=run, 0=don't run (default 1)
 
 % CatGT prb field (only relevant with runCatGT = 1)
-cat_prb_fld = '0:3';          % see CatGT ReadMe for more details (default '0:3')
+cat_prb_fld = '0:2';          % see CatGT ReadMe for more details (default '0:3')
 
 % perform Kilosort on CatGT output
 includeCatGT = 2; % 0=do not include, 1=both non-CatGT+CatGT, 2=only CatGT (default 2)
 
 % perform phy extract-waveforms
-extract_waveforms = 0; %1=run extract-waveforms, 0=dont run extract-waveforms
+extract_waveforms = 1; %1=run extract-waveforms, 0=dont run extract-waveforms
 
 % delete CAT bin file after running CatGT to save space
 deleteCATbin = 0; % 1=delete, 0 save (default 1)
@@ -106,11 +110,16 @@ for folder = 1:length(sessionFolders)
 
     sessionPath = fullfile(root, sessionFolder);
     imecDirs = dir(sessionPath);
+    % keep only directories and get rid of '.' and '..'
+    imecDirs = imecDirs([imecDirs.isdir]);
+    imecDirs = imecDirs(~ismember({imecDirs.name}, {'.', '..'}));
     % for TPrime
     tprime_struct = struct(...
         'nidq_tcat', '',...
         'imec_tcat_list', [],...
-        'spiketime_sec_files', []...
+        'sample_rates', [],...
+        'spiketime_sec_files', [],...
+        'spiketime_sec_adj_files', []...
     );
     
     % dest folder
@@ -124,11 +133,15 @@ for folder = 1:length(sessionFolders)
         catGTCommand = sprintf('runit.bat -dir=%s -run=%s_%s -prb_fld -g=%s -t=0 -ni -prb=%s -ap -gblcar',...
                         root, monkey, date, gNum(2), cat_prb_fld);
         fprintf('  Bash command: %s\n', catGTCommand)
-        % system(catGTCommand);
-        % find name of tcat.nidq.xd with .txt extension
-        tprime_struct.nidq_tcat = dir(fullfile(sessionPath, '*tcat.nidq.xd*.txt'));
+        system(catGTCommand);
     else
         fprintf('Not running CatGT\n');
+    end
+    % find name of tcat.nidq.xd with .txt extension
+    tprime_struct.nidq_tcat = dir(fullfile(sessionPath, '*tcat.nidq.xd*.txt'));
+    if isempty(tprime_struct.nidq_tcat)
+        fprintf('   WARNING: Missing tcat.nidq.xd file. TPrime will not run.\n')
+        runTPrime = 0;
     end
     
     %% loop through all subdirectories and run kilosort
@@ -201,14 +214,14 @@ for folder = 1:length(sessionFolders)
             fprintf('\t  Reading meta file...\n')
             metaFile = SGLX_readMeta.ReadMeta(fileName, rootZ);
             sample_rate = str2double(metaFile.imSampRate);
-            fprintf('\t\t Sampling rate: %.2f\n',sample_rate)
+            fprintf('\t\t Sampling rate: %.2f\n', sample_rate)
     
             % perform on CatGT output as well?
             catMatch = regexp(fileName, catPattern, 'match', 'once');
             if includeCatGT==0 && ~isempty(catMatch); fprintf('\t  Skipping: %s\n', fileName); continue; end % skip if CatGT
             if includeCatGT==2 && isempty(catMatch); fprintf('\t  Skipping: %s\n', fileName); continue; end % skip if not CatGT
             if ~isempty(catMatch); finalDestFolder=fullfile(rootH, [imecFolderName '_ks_cat']); ops.fproc = fullfile(rootH, 'temp_wh_cat.dat'); % proc file on a fast SSD
-            else; finalDestFolder=fullfile(rootH, [imecFolderName '_ks']);
+            else; finalDestFolder=fullfile(rootH, [imecFolderName '_ks_cat']);
             end
             
             % make directory for all ks output
@@ -223,9 +236,9 @@ for folder = 1:length(sessionFolders)
             end
             
             % run Kilosort
-            if runKilosort
+            if runKilosort3
                 tic;
-                fprintf('\tRunning Kilosort...\n');
+                fprintf('\tRunning Kilosort3...\n');
                 rez                = preprocessDataSub(ops);
                 % rez                = datashift2(rez, 1);
                 rez                = datashift_rh(rez, 1, imecFolderName, figPath);
@@ -239,8 +252,17 @@ for folder = 1:length(sessionFolders)
                 % save to destination folder
     
                 rezToPhy2(rez, finalDestFolder);
-                fprintf('\tKilosort complete in %d sec.\n', toc);
-                
+                fprintf('\tKilosort3 complete in %d sec.\n', toc);
+            elseif runKilosort4
+                tic;
+                fprintf('\tRunning Kilosort4...\n');
+                % run kilosort4 from python
+                kilo4Command = sprintf('runit.bat -dir=%s -run=%s_%s -prb_fld -g=%s -t=0 -ni -prb=%s -ap -gblcar',...
+                                root, monkey, date, gNum(2), cat_prb_fld);
+                fprintf('  Bash command: %s\n', kilo4Command)
+                % system(kilo4Command);
+                % save to destination folder
+                fprintf('\tKilosort4 complete in %d sec.\n', toc);
             end
             fprintf('\tDestination Folder: %s \n', finalDestFolder)
     
@@ -259,8 +281,10 @@ for folder = 1:length(sessionFolders)
             tcat_imec_path = fullfile(rootZ, tcat_imec.name);
             % convert to string
             tcat_imec_path = string(tcat_imec_path);
-            % append string to imec_tcat_list without combining the strings
-            tprime_struct.imec_tcat_list = [tprime_struct.imec_tcat_list, tcat_imec_path];
+            % append string to imec_tcat_list without combining the strings only if not already in list
+            if ~any(strcmp(tprime_struct.imec_tcat_list, tcat_imec_path))
+                tprime_struct.imec_tcat_list = [tprime_struct.imec_tcat_list, tcat_imec_path];
+            end
 
             % run extract_waveforms.bat on temp_wh.dat (or temp_wh_cat.dat) file
             if extract_waveforms
@@ -287,6 +311,7 @@ for folder = 1:length(sessionFolders)
                 fprintf('\t\tGenerating %s\n', spike_times_sec_file)
                 fprintf('\t\tDone.\n')
                 tprime_struct.spiketime_sec_files = [tprime_struct.spiketime_sec_files, spike_times_sec_file];
+                tprime_struct.sample_rates = [tprime_struct.sample_rates, sample_rate];
             end
         end
     end
@@ -305,13 +330,31 @@ for folder = 1:length(sessionFolders)
                 tprime_sec_final = strrep(tprime_sec_file, '.txt', '_adj.txt');
                 TPrimeCommand = strcat(TPrimeCommand, sprintf(' -fromstream=%d,%s', j, tprime_imec_tcat));
                 TPrimeCommand = strcat(TPrimeCommand, sprintf(' -events=%d,%s,%s', j, tprime_sec_file, tprime_sec_final));
+                tprime_struct.spiketime_sec_adj_files = [tprime_struct.spiketime_sec_adj_files, tprime_sec_final];
             end
             % system command for TPrime
             fprintf('  Bash command: %s\n', TPrimeCommand)
-            system(TPrimeCommand)
+            system(TPrimeCommand);
+            % read new spike times from file
+            for j = 1:length(tprime_struct.spiketime_sec_adj_files)
+                t_sample_rate = tprime_struct.sample_rates(j);
+                tprime_sec_adj_file = tprime_struct.spiketime_sec_adj_files(j);  
+                fileID = fopen(tprime_sec_adj_file, 'r');
+                tprime_sec_adj = textscan(fileID, '%s');
+                fclose(fileID);
+                % multiply by sample rate to get back to samples
+                fprintf('  Generating adjusted spiketime files for: %s\n', tprime_sec_adj_file)
+                spike_times_adj = str2double(tprime_sec_adj{1}) * t_sample_rate;
+                % convert back to int and write to npy file in appropriate imec folder
+                spike_times_adj = uint64(spike_times_adj);
+                npy_file = strrep(tprime_sec_adj_file, '_sec_adj.txt', '_adj.npy');
+                writeNPY(spike_times_adj, npy_file);
+            end
         else
-            fprintf('TPrime not running. Check tprime_struct - imec_tcat_list or spiketime_sec_files');
+            fprintf('TPrime not running. Check tprime_struct - imec_tcat_list or spiketime_sec_files\n');
         end
+    elseif runTPrime & ~isempty(tprime_struct.nidq_tcat)
+        fprintf('   WARNING: Missing tcat.nidq.xd file. TPrime will not run.\n')
     end
 end
 %% 
